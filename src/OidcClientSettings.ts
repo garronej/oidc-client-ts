@@ -37,6 +37,8 @@ export interface DPoPSettings {
  * @public
  */
 export interface OidcClientSettings {
+    configHash: string;
+
     /** The URL of the OIDC/OAuth2 provider */
     authority: string;
     metadataUrl?: string;
@@ -172,6 +174,9 @@ export interface OidcClientSettings {
  * @see {@link OidcClientSettings}
  */
 export class OidcClientSettingsStore {
+
+    public readonly configHash: string;
+
     // metadata
     public readonly authority: string;
     public readonly metadataUrl: string;
@@ -219,6 +224,7 @@ export class OidcClientSettingsStore {
     public readonly requestTimeoutInSeconds: number | undefined;
 
     public constructor({
+        configHash,
         // metadata related
         authority, metadataUrl, metadata, signingKeys, metadataSeed,
         // client related
@@ -246,6 +252,8 @@ export class OidcClientSettingsStore {
         dpop,
         omitScopeWhenRequesting = false,
     }: OidcClientSettings) {
+
+        this.configHash = configHash;
 
         this.authority = authority;
 

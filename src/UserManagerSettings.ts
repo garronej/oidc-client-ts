@@ -23,6 +23,8 @@ export const DefaultSilentRequestTimeoutInSeconds = 10;
  * @public
  */
 export interface UserManagerSettings extends OidcClientSettings {
+    configHash: string;
+
     /** The URL for the page containing the call to signinPopupCallback to handle the callback from the OIDC/OAuth2 */
     popup_redirect_uri?: string;
     popup_post_logout_redirect_uri?: string;

@@ -6,7 +6,8 @@ import { State } from "./State";
 
 /** @public */
 export interface SigninStateArgs {
-    id?: string;
+    configHash: string;
+
     data?: unknown;
     created?: number;
     request_type?: string;

@@ -91,7 +91,12 @@ export class UserManager {
     protected readonly _silentRenewService: SilentRenewService;
     protected readonly _sessionMonitor: SessionMonitor | null;
 
+    protected readonly _configHash: string;
+
     public constructor(settings: UserManagerSettings, redirectNavigator?: INavigator, popupNavigator?: INavigator, iframeNavigator?: INavigator) {
+
+        this._configHash = settings.configHash;
+
         this.settings = new UserManagerSettingsStore(settings);
 
         this._client = new OidcClient(settings);
@@ -179,6 +184,7 @@ export class UserManager {
 
         const handle = await this._redirectNavigator.prepare({ redirectMethod });
         await this._signinStart({
+            configHash: this._configHash,
             request_type: "si:r",
             dpopJkt,
             ...requestArgs,
@@ -263,6 +269,7 @@ export class UserManager {
 
         const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget, popupSignal });
         const user = await this._signin({
+            configHash: this._configHash,
             request_type: "si:p",
             redirect_uri: url,
             display: "popup",
@@ -337,6 +344,7 @@ export class UserManager {
 
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         user = await this._signin({
+            configHash: this._configHash,
             request_type: "si:s",
             redirect_uri: url,
             prompt: "none",
@@ -458,6 +466,7 @@ export class UserManager {
         const user = await this._loadUser();
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         const navResponse = await this._signinStart({
+            configHash: this._configHash,
             request_type: "si:s", // this acts like a signin silent
             redirect_uri: url,
             prompt: "none",
@@ -566,6 +575,7 @@ export class UserManager {
         } = args;
         const handle = await this._redirectNavigator.prepare({ redirectMethod });
         await this._signoutStart({
+            configHash: this._configHash,
             request_type: "so:r",
             post_logout_redirect_uri: this.settings.post_logout_redirect_uri,
             ...requestArgs,
@@ -605,6 +615,7 @@ export class UserManager {
 
         const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget, popupSignal });
         await this._signout({
+            configHash: this._configHash,
             request_type: "so:p",
             post_logout_redirect_uri: url,
             // we're putting a dummy entry in here because we
@@ -637,7 +648,7 @@ export class UserManager {
         return await this._signoutEnd(navResponse.url);
     }
 
-    protected async _signoutStart(args: CreateSignoutRequestArgs = {}, handle: IWindow): Promise<NavigateResponse> {
+    protected async _signoutStart(args: CreateSignoutRequestArgs, handle: IWindow): Promise<NavigateResponse> {
         const logger = this._logger.create("_signoutStart");
 
         try {
@@ -699,6 +710,7 @@ export class UserManager {
         const url = this.settings.popup_post_logout_redirect_uri;
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         await this._signout({
+            configHash: this._configHash,
             request_type: "so:s",
             post_logout_redirect_uri: url,
             id_token_hint: id_token_hint,

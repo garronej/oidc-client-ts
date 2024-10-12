@@ -1,7 +1,7 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { Logger, CryptoUtils, Timer } from "./utils";
+import { Logger, Timer } from "./utils";
 import type { StateStore } from "./StateStore";
 
 /**
@@ -18,12 +18,26 @@ export class State {
 
     public constructor(args: {
         id?: string;
+        configHash: string | undefined;
         data?: unknown;
         created?: number;
         request_type?: string;
         url_state?: string;
     }) {
-        this.id = args.id || CryptoUtils.generateUUIDv4();
+        this.id = args.id ?? (()=>{
+
+            const { configHash } = args;
+
+            if (configHash === undefined) {
+                const message= "Error in oidc-spa patch for oidc-client-ts: configHash is required";
+                console.error(message);
+                throw new Error("Error in oidc-spa patch for oidc-client-ts: configHash is required");
+            }
+
+            return configHash;
+
+        })();
+        
         this.data = args.data;
 
         if (args.created && args.created > 0) {

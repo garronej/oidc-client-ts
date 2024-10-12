@@ -10,6 +10,7 @@ import { SigninState } from "./SigninState";
  */
 export interface SigninRequestCreateArgs {
     // mandatory
+    configHash: string;
     url: string;
     authority: string;
     client_id: string;
@@ -65,6 +66,7 @@ export class SigninRequest {
     }
 
     public static async create({
+        configHash,
         // mandatory
         url, authority, client_id, redirect_uri, response_type, scope,
         // optional
@@ -104,6 +106,7 @@ export class SigninRequest {
         }
 
         const state = await SigninState.create({
+            configHash,
             data: state_data,
             request_type,
             url_state,

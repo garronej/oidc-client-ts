@@ -81,9 +81,14 @@ export class OidcClient {
     protected readonly _validator: ResponseValidator;
     protected readonly _tokenClient: TokenClient;
 
+    protected readonly _configHash: string;
+
     public constructor(settings: OidcClientSettings);
     public constructor(settings: OidcClientSettingsStore, metadataService: MetadataService);
     public constructor(settings: OidcClientSettings | OidcClientSettingsStore, metadataService?: MetadataService) {
+
+        this._configHash = settings.configHash;
+
         this.settings = settings instanceof OidcClientSettingsStore ? settings : new OidcClientSettingsStore(settings);
 
         this.metadataService = metadataService ?? new MetadataService(this.settings);
@@ -127,6 +132,7 @@ export class OidcClient {
         logger.debug("Received authorization endpoint", url);
 
         const signinRequest = await SigninRequest.create({
+            configHash: this._configHash,
             url,
             authority: this.settings.authority,
             client_id: this.settings.client_id,
@@ -331,7 +337,7 @@ export class OidcClient {
         request_type,
         post_logout_redirect_uri = this.settings.post_logout_redirect_uri,
         extraQueryParams = this.settings.extraQueryParams,
-    }: CreateSignoutRequestArgs = {}): Promise<SignoutRequest> {
+    }: CreateSignoutRequestArgs): Promise<SignoutRequest> {
         const logger = this._logger.create("createSignoutRequest");
 
         const url = await this.metadataService.getEndSessionEndpoint();
@@ -348,6 +354,7 @@ export class OidcClient {
         }
 
         const request = new SignoutRequest({
+            configHash: this._configHash,
             url,
             id_token_hint,
             client_id,
