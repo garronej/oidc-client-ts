@@ -18,7 +18,7 @@ export class State {
 
     public constructor(args: {
         id?: string;
-        configHash: string | undefined;
+        stateQueryParamValue: string | undefined;
         data?: unknown;
         created?: number;
         request_type?: string;
@@ -26,15 +26,15 @@ export class State {
     }) {
         this.id = args.id ?? (()=>{
 
-            const { configHash } = args;
+            const { stateQueryParamValue } = args;
 
-            if (configHash === undefined) {
-                const message= "Error in oidc-spa patch for oidc-client-ts: configHash is required";
+            if (stateQueryParamValue === undefined) {
+                const message= "Error in oidc-spa patch for oidc-client-ts: stateQueryParamValue is required";
                 console.error(message);
-                throw new Error("Error in oidc-spa patch for oidc-client-ts: configHash is required");
+                throw new Error("Error in oidc-spa patch for oidc-client-ts: stateQueryParamValue is required");
             }
 
-            return configHash;
+            return stateQueryParamValue;
 
         })();
         

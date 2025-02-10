@@ -81,13 +81,13 @@ export class OidcClient {
     protected readonly _validator: ResponseValidator;
     protected readonly _tokenClient: TokenClient;
 
-    protected readonly _configHash: string;
+    protected readonly _stateQueryParamValue: string;
 
     public constructor(settings: OidcClientSettings);
     public constructor(settings: OidcClientSettingsStore, metadataService: MetadataService);
     public constructor(settings: OidcClientSettings | OidcClientSettingsStore, metadataService?: MetadataService) {
 
-        this._configHash = settings.configHash;
+        this._stateQueryParamValue = settings.stateQueryParamValue;
 
         this.settings = settings instanceof OidcClientSettingsStore ? settings : new OidcClientSettingsStore(settings);
 
@@ -132,7 +132,7 @@ export class OidcClient {
         logger.debug("Received authorization endpoint", url);
 
         const signinRequest = await SigninRequest.create({
-            configHash: this._configHash,
+            stateQueryParamValue: this._stateQueryParamValue,
             url,
             authority: this.settings.authority,
             client_id: this.settings.client_id,
@@ -354,7 +354,7 @@ export class OidcClient {
         }
 
         const request = new SignoutRequest({
-            configHash: this._configHash,
+            stateQueryParamValue: this._stateQueryParamValue,
             url,
             id_token_hint,
             client_id,

@@ -334,8 +334,6 @@ export class OidcClient {
     // (undocumented)
     clearStaleState(): Promise<void>;
     // (undocumented)
-    protected readonly _configHash: string;
-    // (undocumented)
     createSigninRequest({ state, request, request_uri, request_type, id_token_hint, login_hint, skipUserInfo, nonce, url_state, response_type, scope, redirect_uri, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, extraQueryParams, extraTokenParams, dpopJkt, omitScopeWhenRequesting, }: CreateSigninRequestArgs): Promise<SigninRequest>;
     // (undocumented)
     createSignoutRequest({ state, id_token_hint, client_id, request_type, post_logout_redirect_uri, extraQueryParams, }: CreateSignoutRequestArgs): Promise<SignoutRequest>;
@@ -365,6 +363,8 @@ export class OidcClient {
     revokeToken(token: string, type?: "access_token" | "refresh_token"): Promise<void>;
     // (undocumented)
     readonly settings: OidcClientSettingsStore;
+    // (undocumented)
+    protected readonly _stateQueryParamValue: string;
     // Warning: (ae-forgotten-export) The symbol "TokenClient" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -385,8 +385,6 @@ export interface OidcClientSettings {
     client_id: string;
     // (undocumented)
     client_secret?: string;
-    // (undocumented)
-    configHash: string;
     disablePKCE?: boolean;
     display?: string;
     // Warning: (ae-forgotten-export) The symbol "DPoPSettings" needs to be exported by the entry point index.d.ts
@@ -419,13 +417,15 @@ export interface OidcClientSettings {
     scope?: string;
     signingKeys?: SigningKey[];
     staleStateAgeInSeconds?: number;
+    // (undocumented)
+    stateQueryParamValue: string;
     stateStore?: StateStore;
     ui_locales?: string;
 }
 
 // @public
 export class OidcClientSettingsStore {
-    constructor({ configHash, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
+    constructor({ stateQueryParamValue, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
     // (undocumented)
     readonly acr_values: string | undefined;
     // (undocumented)
@@ -436,8 +436,6 @@ export class OidcClientSettingsStore {
     readonly client_id: string;
     // (undocumented)
     readonly client_secret: string | undefined;
-    // (undocumented)
-    readonly configHash: string;
     // (undocumented)
     readonly disablePKCE: boolean;
     // (undocumented)
@@ -494,6 +492,8 @@ export class OidcClientSettingsStore {
     readonly signingKeys: SigningKey[] | undefined;
     // (undocumented)
     readonly staleStateAgeInSeconds: number;
+    // (undocumented)
+    readonly stateQueryParamValue: string;
     // (undocumented)
     readonly stateStore: StateStore;
     // (undocumented)
@@ -675,7 +675,7 @@ export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs;
 // @public (undocumented)
 export class SigninRequest {
     // (undocumented)
-    static create({ configHash, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
+    static create({ stateQueryParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
     // (undocumented)
     readonly state: SigninState;
     // (undocumented)
@@ -692,8 +692,6 @@ export interface SigninRequestCreateArgs {
     client_id: string;
     // (undocumented)
     client_secret?: string;
-    // (undocumented)
-    configHash: string;
     // (undocumented)
     disablePKCE?: boolean;
     // (undocumented)
@@ -735,6 +733,8 @@ export interface SigninRequestCreateArgs {
     // (undocumented)
     skipUserInfo?: boolean;
     state_data?: unknown;
+    // (undocumented)
+    stateQueryParamValue: string;
     // (undocumented)
     ui_locales?: string;
     // (undocumented)
@@ -829,8 +829,6 @@ export interface SigninStateArgs {
     // (undocumented)
     code_verifier?: string;
     // (undocumented)
-    configHash: string;
-    // (undocumented)
     created?: number;
     // (undocumented)
     data?: unknown;
@@ -846,6 +844,8 @@ export interface SigninStateArgs {
     scope: string;
     // (undocumented)
     skipUserInfo?: boolean;
+    // (undocumented)
+    stateQueryParamValue: string;
     // (undocumented)
     url_state?: string;
 }
@@ -863,7 +863,7 @@ export type SignoutRedirectArgs = RedirectParams & ExtraSignoutRequestArgs;
 
 // @public (undocumented)
 export class SignoutRequest {
-    constructor({ url, configHash, state_data, id_token_hint, post_logout_redirect_uri, extraQueryParams, request_type, client_id, }: SignoutRequestArgs);
+    constructor({ url, stateQueryParamValue, state_data, id_token_hint, post_logout_redirect_uri, extraQueryParams, request_type, client_id, }: SignoutRequestArgs);
     // (undocumented)
     readonly state?: State;
     // (undocumented)
@@ -875,8 +875,6 @@ export interface SignoutRequestArgs {
     // (undocumented)
     client_id?: string;
     // (undocumented)
-    configHash: string;
-    // (undocumented)
     extraQueryParams?: Record<string, string | number | boolean>;
     // (undocumented)
     id_token_hint?: string;
@@ -885,6 +883,8 @@ export interface SignoutRequestArgs {
     // (undocumented)
     request_type?: string;
     state_data?: unknown;
+    // (undocumented)
+    stateQueryParamValue: string;
     // (undocumented)
     url: string;
 }
@@ -913,7 +913,7 @@ export type SilentRenewErrorCallback = (error: Error) => Promise<void> | void;
 export class State {
     constructor(args: {
         id?: string;
-        configHash: string | undefined;
+        stateQueryParamValue: string | undefined;
         data?: unknown;
         created?: number;
         request_type?: string;
@@ -1010,8 +1010,6 @@ export class UserManager {
     clearStaleState(): Promise<void>;
     // (undocumented)
     protected readonly _client: OidcClient;
-    // (undocumented)
-    protected readonly _configHash: string;
     dpopProof(url: string, user: User, httpMethod?: string, nonce?: string): Promise<string | undefined>;
     get events(): UserManagerEvents;
     // (undocumented)
@@ -1071,6 +1069,8 @@ export class UserManager {
     // (undocumented)
     protected readonly _silentRenewService: SilentRenewService;
     startSilentRenew(): void;
+    // (undocumented)
+    protected readonly _stateQueryParamValue: string;
     stopSilentRenew(): void;
     // (undocumented)
     storeUser(user: User | null): Promise<void>;
@@ -1116,8 +1116,6 @@ export interface UserManagerSettings extends OidcClientSettings {
     accessTokenExpiringNotificationTimeInSeconds?: number;
     automaticSilentRenew?: boolean;
     checkSessionIntervalInSeconds?: number;
-    // (undocumented)
-    configHash: string;
     iframeNotifyParentOrigin?: string;
     iframeScriptOrigin?: string;
     includeIdTokenInSilentRenew?: boolean;
@@ -1138,6 +1136,8 @@ export interface UserManagerSettings extends OidcClientSettings {
     revokeTokenTypes?: ("access_token" | "refresh_token")[];
     silent_redirect_uri?: string;
     silentRequestTimeoutInSeconds?: number;
+    // (undocumented)
+    stateQueryParamValue: string;
     // (undocumented)
     stopCheckSessionOnError?: boolean;
     userStore?: WebStorageStateStore;

@@ -37,7 +37,7 @@ export interface DPoPSettings {
  * @public
  */
 export interface OidcClientSettings {
-    configHash: string;
+    stateQueryParamValue: string;
 
     /** The URL of the OIDC/OAuth2 provider */
     authority: string;
@@ -175,7 +175,7 @@ export interface OidcClientSettings {
  */
 export class OidcClientSettingsStore {
 
-    public readonly configHash: string;
+    public readonly stateQueryParamValue: string;
 
     // metadata
     public readonly authority: string;
@@ -224,7 +224,7 @@ export class OidcClientSettingsStore {
     public readonly requestTimeoutInSeconds: number | undefined;
 
     public constructor({
-        configHash,
+        stateQueryParamValue,
         // metadata related
         authority, metadataUrl, metadata, signingKeys, metadataSeed,
         // client related
@@ -253,7 +253,7 @@ export class OidcClientSettingsStore {
         omitScopeWhenRequesting = false,
     }: OidcClientSettings) {
 
-        this.configHash = configHash;
+        this.stateQueryParamValue = stateQueryParamValue;
 
         this.authority = authority;
 
