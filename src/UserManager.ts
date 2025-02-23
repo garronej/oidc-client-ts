@@ -35,7 +35,7 @@ export type RevokeTokensTypes = UserManagerSettings["revokeTokenTypes"];
 /**
  * @public
  */
-export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs;
+export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => string };
 
 /**
  * @public
@@ -170,7 +170,7 @@ export class UserManager {
      *
      * @throws `Error` In cases of wrong authentication.
      */
-    public async signinRedirect(args: SigninRedirectArgs = {}): Promise<void> {
+    public async signinRedirect(args: SigninRedirectArgs): Promise<void> {
         this._logger.create("signinRedirect");
         const {
             redirectMethod,
@@ -274,6 +274,7 @@ export class UserManager {
             redirect_uri: url,
             display: "popup",
             dpopJkt,
+            transformUrl: url => url,
             ...requestArgs,
         }, handle);
         if (user) {
@@ -350,6 +351,7 @@ export class UserManager {
             prompt: "none",
             id_token_hint: this.settings.includeIdTokenInSilentRenew ? user?.id_token : undefined,
             dpopJkt,
+            transformUrl: url => url,
             ...requestArgs,
         }, handle, verifySub);
         if (user) {
@@ -474,6 +476,7 @@ export class UserManager {
             response_type: this.settings.query_status_response_type,
             scope: "openid",
             skipUserInfo: true,
+            transformUrl: url => url,
             ...requestArgs,
         }, handle);
         try {

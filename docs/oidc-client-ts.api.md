@@ -56,6 +56,7 @@ export interface CreateSigninRequestArgs extends Omit<SigninRequestCreateArgs, "
     // (undocumented)
     scope?: string;
     state?: unknown;
+    transformUrl: (url: string) => string;
 }
 
 // @public (undocumented)
@@ -334,7 +335,7 @@ export class OidcClient {
     // (undocumented)
     clearStaleState(): Promise<void>;
     // (undocumented)
-    createSigninRequest({ state, request, request_uri, request_type, id_token_hint, login_hint, skipUserInfo, nonce, url_state, response_type, scope, redirect_uri, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, extraQueryParams, extraTokenParams, dpopJkt, omitScopeWhenRequesting, }: CreateSigninRequestArgs): Promise<SigninRequest>;
+    createSigninRequest({ state, request, request_uri, request_type, id_token_hint, login_hint, skipUserInfo, nonce, url_state, response_type, scope, redirect_uri, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, extraQueryParams, extraTokenParams, dpopJkt, omitScopeWhenRequesting, transformUrl, }: CreateSigninRequestArgs): Promise<SigninRequest>;
     // (undocumented)
     createSignoutRequest({ state, id_token_hint, client_id, request_type, post_logout_redirect_uri, extraQueryParams, }: CreateSignoutRequestArgs): Promise<SignoutRequest>;
     // (undocumented)
@@ -670,12 +671,14 @@ export type SigningKey = Record<string, string | string[]>;
 export type SigninPopupArgs = PopupWindowParams & ExtraSigninRequestArgs;
 
 // @public (undocumented)
-export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs;
+export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & {
+    transformUrl: (url: string) => string;
+};
 
 // @public (undocumented)
 export class SigninRequest {
     // (undocumented)
-    static create({ stateQueryParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
+    static create({ stateQueryParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, transformUrl, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
     // (undocumented)
     readonly state: SigninState;
     // (undocumented)
@@ -735,6 +738,7 @@ export interface SigninRequestCreateArgs {
     state_data?: unknown;
     // (undocumented)
     stateQueryParamValue: string;
+    transformUrl: (url: string) => string;
     // (undocumented)
     ui_locales?: string;
     // (undocumented)
@@ -1044,7 +1048,7 @@ export class UserManager {
     protected _signinEnd(url: string, verifySub?: string): Promise<User>;
     signinPopup(args?: SigninPopupArgs): Promise<User>;
     signinPopupCallback(url?: string, keepOpen?: boolean): Promise<void>;
-    signinRedirect(args?: SigninRedirectArgs): Promise<void>;
+    signinRedirect(args: SigninRedirectArgs): Promise<void>;
     signinRedirectCallback(url?: string): Promise<User>;
     signinResourceOwnerCredentials({ username, password, skipUserInfo, }: SigninResourceOwnerCredentialsArgs): Promise<User>;
     signinSilent(args?: SigninSilentArgs): Promise<User | null>;

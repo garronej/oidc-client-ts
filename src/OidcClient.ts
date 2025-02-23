@@ -30,6 +30,9 @@ export interface CreateSigninRequestArgs
 
     /** custom "state", which can be used by a caller to have "data" round tripped */
     state?: unknown;
+
+    /** oidc-spa extra */
+    transformUrl: (url: string) => string;
 }
 
 /**
@@ -121,6 +124,7 @@ export class OidcClient {
         extraTokenParams = this.settings.extraTokenParams,
         dpopJkt,
         omitScopeWhenRequesting = this.settings.omitScopeWhenRequesting,
+        transformUrl,
     }: CreateSigninRequestArgs): Promise<SigninRequest> {
         const logger = this._logger.create("createSigninRequest");
 
@@ -148,6 +152,7 @@ export class OidcClient {
             nonce,
             disablePKCE: this.settings.disablePKCE,
             omitScopeWhenRequesting,
+            transformUrl,
         });
 
         // house cleaning

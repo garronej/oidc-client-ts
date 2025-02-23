@@ -46,6 +46,9 @@ export interface SigninRequestCreateArgs {
     state_data?: unknown;
     url_state?: string;
     omitScopeWhenRequesting?: boolean;
+
+    /** oidc-spa extra */
+    transformUrl: (url: string) => string;
 }
 
 /**
@@ -78,6 +81,7 @@ export class SigninRequest {
         disablePKCE,
         dpopJkt,
         omitScopeWhenRequesting,
+        transformUrl,
         ...optionalParams
     }: SigninRequestCreateArgs): Promise<SigninRequest> {
         if (!url) {
@@ -156,7 +160,7 @@ export class SigninRequest {
         }
 
         return new SigninRequest({
-            url: parsedUrl.href,
+            url: transformUrl(parsedUrl.href),
             state,
         });
     }
