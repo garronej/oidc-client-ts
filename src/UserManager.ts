@@ -45,7 +45,7 @@ export type SigninPopupArgs = PopupWindowParams & ExtraSigninRequestArgs;
 /**
  * @public
  */
-export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs;
+export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => string };
 
 /**
  * @public
@@ -307,7 +307,7 @@ export class UserManager {
      *
      * @returns A promise that contains the authenticated `User`.
      */
-    public async signinSilent(args: SigninSilentArgs = {}): Promise<User | null> {
+    public async signinSilent(args: SigninSilentArgs): Promise<User | null> {
         const logger = this._logger.create("signinSilent");
         const {
             silentRequestTimeoutInSeconds,
@@ -351,7 +351,6 @@ export class UserManager {
             prompt: "none",
             id_token_hint: this.settings.includeIdTokenInSilentRenew ? user?.id_token : undefined,
             dpopJkt,
-            transformUrl: url => url,
             ...requestArgs,
         }, handle, verifySub);
         if (user) {

@@ -47,7 +47,9 @@ export class SilentRenewService {
     protected _tokenExpiring: AccessTokenCallback = async () => {
         const logger = this._logger.create("_tokenExpiring");
         try {
-            await this._userManager.signinSilent();
+            await this._userManager.signinSilent({
+                transformUrl: (url) => url,
+            });
             logger.debug("silent token renewal successful");
         }
         catch (err) {

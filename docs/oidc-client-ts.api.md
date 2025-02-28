@@ -790,7 +790,9 @@ export class SigninResponse {
 }
 
 // @public (undocumented)
-export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs;
+export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs & {
+    transformUrl: (url: string) => string;
+};
 
 // @public (undocumented)
 export class SigninState extends State {
@@ -1051,7 +1053,7 @@ export class UserManager {
     signinRedirect(args: SigninRedirectArgs): Promise<void>;
     signinRedirectCallback(url?: string): Promise<User>;
     signinResourceOwnerCredentials({ username, password, skipUserInfo, }: SigninResourceOwnerCredentialsArgs): Promise<User>;
-    signinSilent(args?: SigninSilentArgs): Promise<User | null>;
+    signinSilent(args: SigninSilentArgs): Promise<User | null>;
     signinSilentCallback(url?: string): Promise<void>;
     // (undocumented)
     protected _signinStart(args: CreateSigninRequestArgs, handle: IWindow): Promise<NavigateResponse>;
