@@ -48,7 +48,7 @@ export class SilentRenewService {
         const logger = this._logger.create("_tokenExpiring");
         try {
             await this._userManager.signinSilent({
-                transformUrl: (url) => url,
+                transformUrl: (url) => Promise.resolve(url),
             });
             logger.debug("silent token renewal successful");
         }

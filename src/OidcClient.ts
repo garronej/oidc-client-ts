@@ -32,7 +32,7 @@ export interface CreateSigninRequestArgs
     state?: unknown;
 
     /** oidc-spa extra */
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
 }
 
 /**

@@ -56,7 +56,7 @@ export interface CreateSigninRequestArgs extends Omit<SigninRequestCreateArgs, "
     // (undocumented)
     scope?: string;
     state?: unknown;
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
 }
 
 // @public (undocumented)
@@ -672,7 +672,7 @@ export type SigninPopupArgs = PopupWindowParams & ExtraSigninRequestArgs;
 
 // @public (undocumented)
 export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & {
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
 };
 
 // @public (undocumented)
@@ -738,7 +738,7 @@ export interface SigninRequestCreateArgs {
     state_data?: unknown;
     // (undocumented)
     stateQueryParamValue: string;
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
     // (undocumented)
     ui_locales?: string;
     // (undocumented)
@@ -791,7 +791,7 @@ export class SigninResponse {
 
 // @public (undocumented)
 export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs & {
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
 };
 
 // @public (undocumented)

@@ -48,7 +48,7 @@ export interface SigninRequestCreateArgs {
     omitScopeWhenRequesting?: boolean;
 
     /** oidc-spa extra */
-    transformUrl: (url: string) => string;
+    transformUrl: (url: string) => Promise<string>;
 }
 
 /**
@@ -160,7 +160,7 @@ export class SigninRequest {
         }
 
         return new SigninRequest({
-            url: transformUrl(parsedUrl.href),
+            url: await transformUrl(parsedUrl.href),
             state,
         });
     }

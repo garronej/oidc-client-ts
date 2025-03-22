@@ -35,7 +35,7 @@ export type RevokeTokensTypes = UserManagerSettings["revokeTokenTypes"];
 /**
  * @public
  */
-export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => string };
+export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => Promise<string> };
 
 /**
  * @public
@@ -45,7 +45,7 @@ export type SigninPopupArgs = PopupWindowParams & ExtraSigninRequestArgs;
 /**
  * @public
  */
-export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => string };
+export type SigninSilentArgs = IFrameWindowParams & ExtraSigninRequestArgs & { /** oidc-spa addition */transformUrl: (url: string) => Promise<string> };
 
 /**
  * @public
@@ -274,7 +274,7 @@ export class UserManager {
             redirect_uri: url,
             display: "popup",
             dpopJkt,
-            transformUrl: url => url,
+            transformUrl: url => Promise.resolve(url),
             ...requestArgs,
         }, handle);
         if (user) {
@@ -475,7 +475,7 @@ export class UserManager {
             response_type: this.settings.query_status_response_type,
             scope: "openid",
             skipUserInfo: true,
-            transformUrl: url => url,
+            transformUrl: url => Promise.resolve(url),
             ...requestArgs,
         }, handle);
         try {
