@@ -380,53 +380,55 @@ export class OidcClient {
 
 // @public
 export interface OidcClientSettings {
-    acr_values?: string;
-    authority: string;
-    client_authentication?: "client_secret_basic" | "client_secret_post";
-    client_id: string;
+    acr_values?: string; /** oidc-spa addition */
+    authority: string; /** oidc-spa addition */
+    client_authentication?: "client_secret_basic" | "client_secret_post"; /** oidc-spa addition */
+    client_id: string; /** oidc-spa addition */
     // (undocumented)
-    client_secret?: string;
-    disablePKCE?: boolean;
-    display?: string;
+    client_secret?: string; /** oidc-spa addition */
+    disablePKCE?: boolean; /** oidc-spa addition */
+    display?: string; /** oidc-spa addition */
     // Warning: (ae-forgotten-export) The symbol "DPoPSettings" needs to be exported by the entry point index.d.ts
-    dpop?: DPoPSettings | undefined;
-    extraHeaders?: Record<string, ExtraHeader>;
-    extraQueryParams?: Record<string, string | number | boolean>;
+    dpop?: DPoPSettings | undefined; /** oidc-spa addition */
+    extraHeaders?: Record<string, ExtraHeader>; /** oidc-spa addition */
+    extraQueryParams?: Record<string, string | number | boolean>; /** oidc-spa addition */
     // (undocumented)
-    extraTokenParams?: Record<string, unknown>;
-    fetchRequestCredentials?: RequestCredentials;
-    filterProtocolClaims?: boolean | string[];
-    loadUserInfo?: boolean;
-    max_age?: number;
+    extraTokenParams?: Record<string, unknown>; /** oidc-spa addition */
+    // (undocumented)
+    fetch: typeof window.fetch; /** oidc-spa addition */
+    fetchRequestCredentials?: RequestCredentials; /** oidc-spa addition */
+    filterProtocolClaims?: boolean | string[]; /** oidc-spa addition */
+    loadUserInfo?: boolean; /** oidc-spa addition */
+    max_age?: number; /** oidc-spa addition */
     mergeClaimsStrategy?: {
         array: "replace" | "merge";
-    };
-    metadata?: Partial<OidcMetadata>;
-    metadataSeed?: Partial<OidcMetadata>;
+    }; /** oidc-spa addition */
+    metadata?: Partial<OidcMetadata>; /** oidc-spa addition */
+    metadataSeed?: Partial<OidcMetadata>; /** oidc-spa addition */
     // (undocumented)
-    metadataUrl?: string;
-    omitScopeWhenRequesting?: boolean;
-    post_logout_redirect_uri?: string;
-    prompt?: string;
-    redirect_uri: string;
-    refreshTokenAllowedScope?: string | undefined;
-    requestTimeoutInSeconds?: number | undefined;
-    resource?: string | string[];
-    response_mode?: "query" | "fragment";
-    response_type?: string;
-    revokeTokenAdditionalContentTypes?: string[];
-    scope?: string;
-    signingKeys?: SigningKey[];
-    staleStateAgeInSeconds?: number;
+    metadataUrl?: string; /** oidc-spa addition */
+    omitScopeWhenRequesting?: boolean; /** oidc-spa addition */
+    post_logout_redirect_uri?: string; /** oidc-spa addition */
+    prompt?: string; /** oidc-spa addition */
+    redirect_uri: string; /** oidc-spa addition */
+    refreshTokenAllowedScope?: string | undefined; /** oidc-spa addition */
+    requestTimeoutInSeconds?: number | undefined; /** oidc-spa addition */
+    resource?: string | string[]; /** oidc-spa addition */
+    response_mode?: "query" | "fragment"; /** oidc-spa addition */
+    response_type?: string; /** oidc-spa addition */
+    revokeTokenAdditionalContentTypes?: string[]; /** oidc-spa addition */
+    scope?: string; /** oidc-spa addition */
+    signingKeys?: SigningKey[]; /** oidc-spa addition */
+    staleStateAgeInSeconds?: number; /** oidc-spa addition */
     // (undocumented)
-    stateQueryParamValue: string;
-    stateStore?: StateStore;
+    stateQueryParamValue: string; /** oidc-spa addition */
+    stateStore?: StateStore; /** oidc-spa addition */
     ui_locales?: string;
 }
 
 // @public
 export class OidcClientSettingsStore {
-    constructor({ stateQueryParamValue, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
+    constructor({ stateQueryParamValue, fetch, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
     // (undocumented)
     readonly acr_values: string | undefined;
     // (undocumented)
@@ -449,6 +451,8 @@ export class OidcClientSettingsStore {
     readonly extraQueryParams: Record<string, string | number | boolean>;
     // (undocumented)
     readonly extraTokenParams: Record<string, unknown>;
+    // (undocumented)
+    readonly fetch: typeof window.fetch;
     // (undocumented)
     readonly fetchRequestCredentials: RequestCredentials;
     // (undocumented)

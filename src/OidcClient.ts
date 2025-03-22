@@ -17,6 +17,7 @@ import { TokenClient } from "./TokenClient";
 import { ClaimsService } from "./ClaimsService";
 import { DPoPState, type DPoPStore } from "./DPoPStore";
 import { ErrorDPoPNonce } from "./errors/ErrorDPoPNonce";
+import { setFetch } from "./fetch";
 
 /**
  * @public
@@ -91,6 +92,8 @@ export class OidcClient {
     public constructor(settings: OidcClientSettings | OidcClientSettingsStore, metadataService?: MetadataService) {
 
         this._stateQueryParamValue = settings.stateQueryParamValue;
+
+        setFetch(settings.fetch);
 
         this.settings = settings instanceof OidcClientSettingsStore ? settings : new OidcClientSettingsStore(settings);
 
