@@ -256,6 +256,7 @@ export class OidcClient {
         const tokenResponse: Record<string, unknown> = await this._tokenClient.exchangeCredentials({ username, password, ...extraTokenParams });
         const signinResponse: SigninResponse = new SigninResponse(new URLSearchParams());
         Object.assign(signinResponse, tokenResponse);
+        signinResponse.__oidc_spa_tokenResponse = tokenResponse;
         await this._validator.validateCredentialsResponse(signinResponse, skipUserInfo);
         return signinResponse;
     }
@@ -328,6 +329,7 @@ export class OidcClient {
 
         const response = new SigninResponse(new URLSearchParams());
         Object.assign(response, result);
+        response.__oidc_spa_tokenResponse = result;
         logger.debug("validating response", response);
         await this._validator.validateRefreshResponse(response, {
             ...state,

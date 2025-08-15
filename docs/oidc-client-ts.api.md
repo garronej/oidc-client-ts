@@ -758,6 +758,8 @@ export type SigninResourceOwnerCredentialsArgs = ProcessResourceOwnerPasswordCre
 export class SigninResponse {
     constructor(params: URLSearchParams);
     // (undocumented)
+    __oidc_spa_tokenResponse: Record<string, unknown> | undefined;
+    // (undocumented)
     access_token: string;
     // (undocumented)
     readonly code: string | null;
@@ -971,7 +973,10 @@ export class User {
         expires_at?: number;
         userState?: unknown;
         url_state?: string;
+        __oidc_spa_tokenResponse: Record<string, unknown>;
     });
+    // (undocumented)
+    readonly __oidc_spa_tokenResponse: Record<string, unknown>;
     access_token: string;
     get expired(): boolean | undefined;
     expires_at?: number;

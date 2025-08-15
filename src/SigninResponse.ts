@@ -12,6 +12,9 @@ const OidcScope = "openid";
  * @see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
  */
 export class SigninResponse {
+
+    public __oidc_spa_tokenResponse: Record<string, unknown> | undefined;
+
     // props present in the initial callback response regardless of success
     public readonly state: string | null;
     /** @see {@link User.session_state} */
@@ -65,6 +68,7 @@ export class SigninResponse {
         this.error_uri = params.get("error_uri");
 
         this.code = params.get("code");
+        this.__oidc_spa_tokenResponse = undefined;
     }
 
     public get expires_in(): number | undefined {

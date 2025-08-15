@@ -15,6 +15,9 @@ export type UserProfile = IdTokenClaims;
  * @public
  */
 export class User {
+
+    public readonly __oidc_spa_tokenResponse: Record<string, unknown>;
+
     /**
      * A JSON Web Token (JWT). Only provided if `openid` scope was requested.
      * The application can access the data decoded by using the `profile` property.
@@ -64,6 +67,7 @@ export class User {
         expires_at?: number;
         userState?: unknown;
         url_state?: string;
+        __oidc_spa_tokenResponse: Record<string, unknown>;
     }) {
         this.id_token = args.id_token;
         this.session_state = args.session_state ?? null;
@@ -76,6 +80,7 @@ export class User {
         this.expires_at = args.expires_at;
         this.state = args.userState;
         this.url_state = args.url_state;
+        this.__oidc_spa_tokenResponse = args.__oidc_spa_tokenResponse;
     }
 
     /** Computed number of seconds the access token has remaining. */
@@ -117,6 +122,7 @@ export class User {
             scope: this.scope,
             profile: this.profile,
             expires_at: this.expires_at,
+            __oidc_spa_tokenResponse: this.__oidc_spa_tokenResponse,
         });
     }
 

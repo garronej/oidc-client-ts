@@ -370,7 +370,12 @@ export class UserManager {
             timeoutInSeconds: this.settings.silentRequestTimeoutInSeconds,
             ...args,
         });
-        const user = new User({ ...args.state, ...response });
+        if (response.__oidc_spa_tokenResponse === undefined) {
+            throw new Error(
+                "Wrong Assertion Encountered: Error in oidc-spa mod of oidc-client-ts",
+            );
+        }
+        const user = new User({ ...args.state, ...response, __oidc_spa_tokenResponse: response.__oidc_spa_tokenResponse });
 
         await this.storeUser(user);
         await this._events.load(user);
@@ -548,7 +553,15 @@ export class UserManager {
 
     protected async _buildUser(signinResponse: SigninResponse, verifySub?: string) {
         const logger = this._logger.create("_buildUser");
-        const user = new User(signinResponse);
+        if (signinResponse.__oidc_spa_tokenResponse === undefined) {
+            throw new Error(
+                "Wrong Assertion Encountered: Error in oidc-spa mod of oidc-client-ts",
+            );
+        }
+        const user = new User({
+            ...signinResponse,
+            __oidc_spa_tokenResponse: signinResponse.__oidc_spa_tokenResponse,
+        });
         if (verifySub) {
             if (verifySub !== user.profile.sub) {
                 logger.debug("current user does not match user returned from signin. sub from signin:", user.profile.sub);

@@ -186,6 +186,7 @@ export class ResponseValidator {
                 ...state.extraTokenParams,
             });
             Object.assign(response, tokenResponse);
+            response.__oidc_spa_tokenResponse = tokenResponse;
         } else {
             logger.debug("No code to process");
         }
