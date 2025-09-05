@@ -11,7 +11,7 @@ import { State } from "./State";
 export interface SignoutRequestArgs {
     // mandatory
     url: string;
-    stateQueryParamValue: string;
+    stateUrlParamValue: string;
 
     // optional
     id_token_hint?: string;
@@ -36,7 +36,7 @@ export class SignoutRequest {
 
     public constructor({
         url,
-        stateQueryParamValue,
+        stateUrlParamValue,
         state_data, id_token_hint, post_logout_redirect_uri, extraQueryParams, request_type, client_id,
     }: SignoutRequestArgs) {
         if (!url) {
@@ -56,7 +56,7 @@ export class SignoutRequest {
             parsedUrl.searchParams.append("post_logout_redirect_uri", post_logout_redirect_uri);
 
             if (state_data) {
-                this.state = new State({ stateQueryParamValue, data: state_data, request_type });
+                this.state = new State({ stateUrlParamValue, data: state_data, request_type });
 
                 parsedUrl.searchParams.append("state", this.state.id);
             }

@@ -18,7 +18,7 @@ export class State {
 
     public constructor(args: {
         id?: string;
-        stateQueryParamValue: string | undefined;
+        stateUrlParamValue: string | undefined;
         data?: unknown;
         created?: number;
         request_type?: string;
@@ -26,15 +26,15 @@ export class State {
     }) {
         this.id = args.id ?? (()=>{
 
-            const { stateQueryParamValue } = args;
+            const { stateUrlParamValue } = args;
 
-            if (stateQueryParamValue === undefined) {
-                const message= "Error in oidc-spa patch for oidc-client-ts: stateQueryParamValue is required";
+            if (stateUrlParamValue === undefined) {
+                const message= "Error in oidc-spa patch for oidc-client-ts: stateUrlParamValue is required";
                 console.error(message);
-                throw new Error("Error in oidc-spa patch for oidc-client-ts: stateQueryParamValue is required");
+                throw new Error("Error in oidc-spa patch for oidc-client-ts: stateUrlParamValue is required");
             }
 
-            return stateQueryParamValue;
+            return stateUrlParamValue;
 
         })();
         

@@ -91,11 +91,11 @@ export class UserManager {
     protected readonly _silentRenewService: SilentRenewService;
     protected readonly _sessionMonitor: SessionMonitor | null;
 
-    protected readonly _stateQueryParamValue: string;
+    protected readonly _stateUrlParamValue: string;
 
     public constructor(settings: UserManagerSettings, redirectNavigator?: INavigator, popupNavigator?: INavigator, iframeNavigator?: INavigator) {
 
-        this._stateQueryParamValue = settings.stateQueryParamValue;
+        this._stateUrlParamValue = settings.stateUrlParamValue;
 
         this.settings = new UserManagerSettingsStore(settings);
 
@@ -184,7 +184,7 @@ export class UserManager {
 
         const handle = await this._redirectNavigator.prepare({ redirectMethod });
         await this._signinStart({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "si:r",
             dpopJkt,
             ...requestArgs,
@@ -269,7 +269,7 @@ export class UserManager {
 
         const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget, popupSignal });
         const user = await this._signin({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "si:p",
             redirect_uri: url,
             display: "popup",
@@ -345,7 +345,7 @@ export class UserManager {
 
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         user = await this._signin({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "si:s",
             redirect_uri: url,
             prompt: "none",
@@ -472,7 +472,7 @@ export class UserManager {
         const user = await this._loadUser();
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         const navResponse = await this._signinStart({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "si:s", // this acts like a signin silent
             redirect_uri: url,
             prompt: "none",
@@ -590,7 +590,7 @@ export class UserManager {
         } = args;
         const handle = await this._redirectNavigator.prepare({ redirectMethod });
         await this._signoutStart({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "so:r",
             post_logout_redirect_uri: this.settings.post_logout_redirect_uri,
             ...requestArgs,
@@ -630,7 +630,7 @@ export class UserManager {
 
         const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget, popupSignal });
         await this._signout({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "so:p",
             post_logout_redirect_uri: url,
             // we're putting a dummy entry in here because we
@@ -725,7 +725,7 @@ export class UserManager {
         const url = this.settings.popup_post_logout_redirect_uri;
         const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
         await this._signout({
-            stateQueryParamValue: this._stateQueryParamValue,
+            stateUrlParamValue: this._stateUrlParamValue,
             request_type: "so:s",
             post_logout_redirect_uri: url,
             id_token_hint: id_token_hint,

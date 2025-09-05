@@ -365,7 +365,7 @@ export class OidcClient {
     // (undocumented)
     readonly settings: OidcClientSettingsStore;
     // (undocumented)
-    protected readonly _stateQueryParamValue: string;
+    protected readonly _stateUrlParamValue: string;
     // Warning: (ae-forgotten-export) The symbol "TokenClient" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -420,15 +420,15 @@ export interface OidcClientSettings {
     scope?: string; /** oidc-spa addition */
     signingKeys?: SigningKey[]; /** oidc-spa addition */
     staleStateAgeInSeconds?: number; /** oidc-spa addition */
-    // (undocumented)
-    stateQueryParamValue: string; /** oidc-spa addition */
     stateStore?: StateStore; /** oidc-spa addition */
+    // (undocumented)
+    stateUrlParamValue: string; /** oidc-spa addition */
     ui_locales?: string;
 }
 
 // @public
 export class OidcClientSettingsStore {
-    constructor({ stateQueryParamValue, fetch, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
+    constructor({ stateUrlParamValue, fetch, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
     // (undocumented)
     readonly acr_values: string | undefined;
     // (undocumented)
@@ -498,9 +498,9 @@ export class OidcClientSettingsStore {
     // (undocumented)
     readonly staleStateAgeInSeconds: number;
     // (undocumented)
-    readonly stateQueryParamValue: string;
-    // (undocumented)
     readonly stateStore: StateStore;
+    // (undocumented)
+    readonly stateUrlParamValue: string;
     // (undocumented)
     readonly ui_locales: string | undefined;
 }
@@ -682,7 +682,7 @@ export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & {
 // @public (undocumented)
 export class SigninRequest {
     // (undocumented)
-    static create({ stateQueryParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, transformUrl, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
+    static create({ stateUrlParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, transformUrl, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
     // (undocumented)
     readonly state: SigninState;
     // (undocumented)
@@ -741,7 +741,7 @@ export interface SigninRequestCreateArgs {
     skipUserInfo?: boolean;
     state_data?: unknown;
     // (undocumented)
-    stateQueryParamValue: string;
+    stateUrlParamValue: string;
     transformUrl: (url: string) => string;
     // (undocumented)
     ui_locales?: string;
@@ -857,7 +857,7 @@ export interface SigninStateArgs {
     // (undocumented)
     skipUserInfo?: boolean;
     // (undocumented)
-    stateQueryParamValue: string;
+    stateUrlParamValue: string;
     // (undocumented)
     url_state?: string;
 }
@@ -875,7 +875,7 @@ export type SignoutRedirectArgs = RedirectParams & ExtraSignoutRequestArgs;
 
 // @public (undocumented)
 export class SignoutRequest {
-    constructor({ url, stateQueryParamValue, state_data, id_token_hint, post_logout_redirect_uri, extraQueryParams, request_type, client_id, }: SignoutRequestArgs);
+    constructor({ url, stateUrlParamValue, state_data, id_token_hint, post_logout_redirect_uri, extraQueryParams, request_type, client_id, }: SignoutRequestArgs);
     // (undocumented)
     readonly state?: State;
     // (undocumented)
@@ -896,7 +896,7 @@ export interface SignoutRequestArgs {
     request_type?: string;
     state_data?: unknown;
     // (undocumented)
-    stateQueryParamValue: string;
+    stateUrlParamValue: string;
     // (undocumented)
     url: string;
 }
@@ -925,7 +925,7 @@ export type SilentRenewErrorCallback = (error: Error) => Promise<void> | void;
 export class State {
     constructor(args: {
         id?: string;
-        stateQueryParamValue: string | undefined;
+        stateUrlParamValue: string | undefined;
         data?: unknown;
         created?: number;
         request_type?: string;
@@ -1085,7 +1085,7 @@ export class UserManager {
     protected readonly _silentRenewService: SilentRenewService;
     startSilentRenew(): void;
     // (undocumented)
-    protected readonly _stateQueryParamValue: string;
+    protected readonly _stateUrlParamValue: string;
     stopSilentRenew(): void;
     // (undocumented)
     storeUser(user: User | null): Promise<void>;
@@ -1152,7 +1152,7 @@ export interface UserManagerSettings extends OidcClientSettings {
     silent_redirect_uri?: string;
     silentRequestTimeoutInSeconds?: number;
     // (undocumented)
-    stateQueryParamValue: string;
+    stateUrlParamValue: string;
     // (undocumented)
     stopCheckSessionOnError?: boolean;
     userStore?: WebStorageStateStore;

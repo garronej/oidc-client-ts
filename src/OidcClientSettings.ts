@@ -37,7 +37,7 @@ export interface DPoPSettings {
  * @public
  */
 export interface OidcClientSettings {
-    stateQueryParamValue: string; /** oidc-spa addition */
+    stateUrlParamValue: string; /** oidc-spa addition */
     fetch: typeof window.fetch; /** oidc-spa addition */
 
     /** The URL of the OIDC/OAuth2 provider */
@@ -176,7 +176,7 @@ export interface OidcClientSettings {
  */
 export class OidcClientSettingsStore {
 
-    public readonly stateQueryParamValue: string;
+    public readonly stateUrlParamValue: string;
     public readonly fetch: typeof window.fetch;
 
     // metadata
@@ -226,7 +226,7 @@ export class OidcClientSettingsStore {
     public readonly requestTimeoutInSeconds: number | undefined;
 
     public constructor({
-        stateQueryParamValue,
+        stateUrlParamValue,
         fetch,
         // metadata related
         authority, metadataUrl, metadata, signingKeys, metadataSeed,
@@ -256,7 +256,7 @@ export class OidcClientSettingsStore {
         omitScopeWhenRequesting = false,
     }: OidcClientSettings) {
 
-        this.stateQueryParamValue = stateQueryParamValue;
+        this.stateUrlParamValue = stateUrlParamValue;
 
         this.fetch = fetch;
 
