@@ -394,8 +394,6 @@ export interface OidcClientSettings {
     extraQueryParams?: Record<string, string | number | boolean>; /** oidc-spa addition */
     // (undocumented)
     extraTokenParams?: Record<string, unknown>; /** oidc-spa addition */
-    // (undocumented)
-    fetch: typeof window.fetch; /** oidc-spa addition */
     fetchRequestCredentials?: RequestCredentials; /** oidc-spa addition */
     filterProtocolClaims?: boolean | string[]; /** oidc-spa addition */
     loadUserInfo?: boolean; /** oidc-spa addition */
@@ -428,7 +426,7 @@ export interface OidcClientSettings {
 
 // @public
 export class OidcClientSettingsStore {
-    constructor({ stateUrlParamValue, fetch, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
+    constructor({ stateUrlParamValue, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
     // (undocumented)
     readonly acr_values: string | undefined;
     // (undocumented)
@@ -451,8 +449,6 @@ export class OidcClientSettingsStore {
     readonly extraQueryParams: Record<string, string | number | boolean>;
     // (undocumented)
     readonly extraTokenParams: Record<string, unknown>;
-    // (undocumented)
-    readonly fetch: typeof window.fetch;
     // (undocumented)
     readonly fetchRequestCredentials: RequestCredentials;
     // (undocumented)

@@ -5,7 +5,6 @@ import { ErrorResponse, ErrorTimeout } from "./errors";
 import type { ExtraHeader } from "./OidcClientSettings";
 import { Logger } from "./utils";
 import { ErrorDPoPNonce } from "./errors/ErrorDPoPNonce";
-import { getFetch } from "./fetch";
 
 /**
  * @internal
@@ -53,8 +52,6 @@ export class JsonService {
 
     protected async fetchWithTimeout(input: RequestInfo, init: RequestInit & { timeoutInSeconds?: number } = {}) {
         const { timeoutInSeconds, ...initFetch } = init;
-
-        const { fetch } = getFetch();
 
         if (!timeoutInSeconds) {
             return await fetch(input, initFetch);
