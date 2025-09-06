@@ -38,9 +38,6 @@
     "lint": "eslint --max-warnings=0 --cache .",
     "prepare": "husky"
   },
-  "dependencies": {
-    "jwt-decode": "^4.0.0"
-  },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.47.2",
     "@testing-library/jest-dom": "^6.4.6",
