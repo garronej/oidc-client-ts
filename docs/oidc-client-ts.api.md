@@ -754,6 +754,8 @@ export type SigninResourceOwnerCredentialsArgs = ProcessResourceOwnerPasswordCre
 export class SigninResponse {
     constructor(params: URLSearchParams);
     // (undocumented)
+    __oidc_spa_localTimeWhenTokenIssued: number | undefined;
+    // (undocumented)
     __oidc_spa_tokenResponse: Record<string, unknown> | undefined;
     // (undocumented)
     access_token: string;
@@ -970,7 +972,10 @@ export class User {
         userState?: unknown;
         url_state?: string;
         __oidc_spa_tokenResponse: Record<string, unknown>;
+        __oidc_spa_localTimeWhenTokenIssued: number;
     });
+    // (undocumented)
+    __oidc_spa_localTimeWhenTokenIssued: number;
     // (undocumented)
     readonly __oidc_spa_tokenResponse: Record<string, unknown>;
     access_token: string;

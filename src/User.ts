@@ -17,6 +17,7 @@ export type UserProfile = IdTokenClaims;
 export class User {
 
     public readonly __oidc_spa_tokenResponse: Record<string, unknown>;
+    public __oidc_spa_localTimeWhenTokenIssued: number;
 
     /**
      * A JSON Web Token (JWT). Only provided if `openid` scope was requested.
@@ -68,6 +69,7 @@ export class User {
         userState?: unknown;
         url_state?: string;
         __oidc_spa_tokenResponse: Record<string, unknown>;
+        __oidc_spa_localTimeWhenTokenIssued: number;
     }) {
         this.id_token = args.id_token;
         this.session_state = args.session_state ?? null;
@@ -81,6 +83,7 @@ export class User {
         this.state = args.userState;
         this.url_state = args.url_state;
         this.__oidc_spa_tokenResponse = args.__oidc_spa_tokenResponse;
+        this.__oidc_spa_localTimeWhenTokenIssued = args.__oidc_spa_localTimeWhenTokenIssued;
     }
 
     /** Computed number of seconds the access token has remaining. */
@@ -123,6 +126,7 @@ export class User {
             profile: this.profile,
             expires_at: this.expires_at,
             __oidc_spa_tokenResponse: this.__oidc_spa_tokenResponse,
+            __oidc_spa_localTimeWhenTokenIssued: this.__oidc_spa_localTimeWhenTokenIssued,
         });
     }
 

@@ -13,7 +13,7 @@ import { SignoutRequest, type SignoutRequestArgs } from "./SignoutRequest";
 import { SignoutResponse } from "./SignoutResponse";
 import { SigninState } from "./SigninState";
 import { State } from "./State";
-import { TokenClient } from "./TokenClient";
+import { TokenClient, localTimeByResponse } from "./TokenClient";
 import { ClaimsService } from "./ClaimsService";
 import { DPoPState, type DPoPStore } from "./DPoPStore";
 import { ErrorDPoPNonce } from "./errors/ErrorDPoPNonce";
@@ -254,6 +254,13 @@ export class OidcClient {
         const signinResponse: SigninResponse = new SigninResponse(new URLSearchParams());
         Object.assign(signinResponse, tokenResponse);
         signinResponse.__oidc_spa_tokenResponse = tokenResponse;
+        signinResponse.__oidc_spa_localTimeWhenTokenIssued = (()=>{
+            const time = localTimeByResponse.get(tokenResponse);
+            if (time === undefined) {
+                throw new Error("oidc-spa error in oidc-client-ts");
+            }
+            return time;
+        })();
         await this._validator.validateCredentialsResponse(signinResponse, skipUserInfo);
         return signinResponse;
     }
@@ -327,6 +334,13 @@ export class OidcClient {
         const response = new SigninResponse(new URLSearchParams());
         Object.assign(response, result);
         response.__oidc_spa_tokenResponse = result;
+        response.__oidc_spa_localTimeWhenTokenIssued = (()=>{
+            const time = localTimeByResponse.get(result);
+            if (time === undefined) {
+                throw new Error("oidc-spa error in oidc-client-ts");
+            }
+            return time;
+        })();
         logger.debug("validating response", response);
         await this._validator.validateRefreshResponse(response, {
             ...state,

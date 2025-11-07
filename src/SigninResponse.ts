@@ -14,6 +14,7 @@ const OidcScope = "openid";
 export class SigninResponse {
 
     public __oidc_spa_tokenResponse: Record<string, unknown> | undefined;
+    public __oidc_spa_localTimeWhenTokenIssued: number | undefined;
 
     // props present in the initial callback response regardless of success
     public readonly state: string | null;
@@ -69,6 +70,7 @@ export class SigninResponse {
 
         this.code = params.get("code");
         this.__oidc_spa_tokenResponse = undefined;
+        this.__oidc_spa_localTimeWhenTokenIssued = undefined;
     }
 
     public get expires_in(): number | undefined {

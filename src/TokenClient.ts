@@ -61,6 +61,9 @@ export interface RevokeArgs {
     token_type_hint?: "access_token" | "refresh_token";
 }
 
+// NOTE: oidc-spa addition
+export const localTimeByResponse = new WeakMap<Record<string, unknown>, number>();
+
 /**
  * @internal
  */
@@ -129,6 +132,7 @@ export class TokenClient {
         const url = await this._metadataService.getTokenEndpoint(false);
         logger.debug("got token endpoint");
 
+        const timeBefore= Date.now();
         const response = await this._jsonService.postForm(url, {
             body: params,
             basicAuth,
@@ -136,6 +140,8 @@ export class TokenClient {
             initCredentials: this._settings.fetchRequestCredentials,
             extraHeaders,
         });
+        const timeAfter = Date.now();
+        localTimeByResponse.set(response, Math.floor((timeBefore + timeAfter)/2));
 
         logger.debug("got response");
 
@@ -190,7 +196,10 @@ export class TokenClient {
         const url = await this._metadataService.getTokenEndpoint(false);
         logger.debug("got token endpoint");
 
+        const timeBefore= Date.now();
         const response = await this._jsonService.postForm(url, { body: params, basicAuth, timeoutInSeconds: this._settings.requestTimeoutInSeconds, initCredentials: this._settings.fetchRequestCredentials });
+        const timeAfter = Date.now();
+        localTimeByResponse.set(response, Math.floor((timeBefore + timeAfter)/2));
         logger.debug("got response");
 
         return response;
@@ -246,7 +255,10 @@ export class TokenClient {
         const url = await this._metadataService.getTokenEndpoint(false);
         logger.debug("got token endpoint");
 
+        const timeBefore= Date.now();
         const response = await this._jsonService.postForm(url, { body: params, basicAuth, timeoutInSeconds, initCredentials: this._settings.fetchRequestCredentials, extraHeaders });
+        const timeAfter = Date.now();
+        localTimeByResponse.set(response, Math.floor((timeBefore + timeAfter)/2));
         logger.debug("got response");
 
         return response;

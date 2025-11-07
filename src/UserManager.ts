@@ -370,12 +370,19 @@ export class UserManager {
             timeoutInSeconds: this.settings.silentRequestTimeoutInSeconds,
             ...args,
         });
-        if (response.__oidc_spa_tokenResponse === undefined) {
-            throw new Error(
-                "Wrong Assertion Encountered: Error in oidc-spa mod of oidc-client-ts",
-            );
+        if (
+            response.__oidc_spa_tokenResponse === undefined ||
+            response.__oidc_spa_localTimeWhenTokenIssued === undefined
+        ) {
+            throw new Error( "Wrong Assertion Encountered: Error in oidc-spa mod of oidc-client-ts");
         }
-        const user = new User({ ...args.state, ...response, __oidc_spa_tokenResponse: response.__oidc_spa_tokenResponse });
+        const user = new User({
+            ...args.state,
+            ...response,
+            __oidc_spa_tokenResponse: response.__oidc_spa_tokenResponse,
+            __oidc_spa_localTimeWhenTokenIssued:
+                response.__oidc_spa_localTimeWhenTokenIssued,
+        });
 
         await this.storeUser(user);
         await this._events.load(user);
@@ -553,7 +560,7 @@ export class UserManager {
 
     protected async _buildUser(signinResponse: SigninResponse, verifySub?: string) {
         const logger = this._logger.create("_buildUser");
-        if (signinResponse.__oidc_spa_tokenResponse === undefined) {
+        if (signinResponse.__oidc_spa_tokenResponse === undefined || signinResponse.__oidc_spa_localTimeWhenTokenIssued === undefined) {
             throw new Error(
                 "Wrong Assertion Encountered: Error in oidc-spa mod of oidc-client-ts",
             );
@@ -561,6 +568,7 @@ export class UserManager {
         const user = new User({
             ...signinResponse,
             __oidc_spa_tokenResponse: signinResponse.__oidc_spa_tokenResponse,
+            __oidc_spa_localTimeWhenTokenIssued: signinResponse.__oidc_spa_localTimeWhenTokenIssued,
         });
         if (verifySub) {
             if (verifySub !== user.profile.sub) {

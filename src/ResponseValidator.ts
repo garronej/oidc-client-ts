@@ -5,7 +5,7 @@ import { Logger, JwtUtils } from "./utils";
 import { ErrorResponse } from "./errors";
 import type { MetadataService } from "./MetadataService";
 import { UserInfoService } from "./UserInfoService";
-import { TokenClient } from "./TokenClient";
+import { TokenClient, localTimeByResponse } from "./TokenClient";
 import type { ExtraHeader, OidcClientSettingsStore } from "./OidcClientSettings";
 import type { SigninState } from "./SigninState";
 import type { SigninResponse } from "./SigninResponse";
@@ -187,6 +187,14 @@ export class ResponseValidator {
             });
             Object.assign(response, tokenResponse);
             response.__oidc_spa_tokenResponse = tokenResponse;
+            response.__oidc_spa_localTimeWhenTokenIssued = (()=>{
+                const time = localTimeByResponse.get(tokenResponse);
+                if (time === undefined) {
+                    throw new Error("oidc-spa error in oidc-client-ts");
+                }
+                return time;
+            })();
+
         } else {
             logger.debug("No code to process");
         }
