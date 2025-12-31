@@ -1,5 +1,4 @@
 import { Logger } from "./Logger";
-import { JwtUtils } from "./JwtUtils";
 
 export interface GenerateDPoPProofOpts {
     url: string;
@@ -139,46 +138,15 @@ export class CryptoUtils {
         keyPair,
         nonce,
     }: GenerateDPoPProofOpts): Promise<string> {
-        let hashedToken: Uint8Array;
-        let encodedHash: string;
-
-        const payload: Record<string, string | number> = {
-            "jti": window.crypto.randomUUID(),
-            "htm": httpMethod ?? "GET",
-            "htu": url,
-            "iat": Math.floor(Date.now() / 1000),
-        };
-
-        if (accessToken) {
-            hashedToken = await CryptoUtils.hash("SHA-256", accessToken);
-            encodedHash = CryptoUtils.encodeBase64Url(hashedToken);
-            payload.ath = encodedHash;
-        }
-
-        if (nonce) {
-            payload.nonce = nonce;
-        }
-
-        try {
-            const publicJwk = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
-            const header = {
-                "alg": "ES256",
-                "typ": "dpop+jwt",
-                "jwk": {
-                    "crv": publicJwk.crv,
-                    "kty": publicJwk.kty,
-                    "x": publicJwk.x,
-                    "y": publicJwk.y,
-                },
-            };
-            return await JwtUtils.generateSignedJwt(header, payload, keyPair.privateKey);
-        } catch (err) {
-            if (err instanceof TypeError) {
-                throw new Error(`Error exporting dpop public key: ${err.message}`);
-            } else {
-                throw err;
-            }
-        }
+        return `generateDPoPProof(${JSON.stringify({ 
+            url, 
+            accessToken, 
+            httpMethod, 
+            // NOTE: oidc-spa: Here there is a custom .toJSON property on keyPair that will
+            // enable us to resolve the actual proof in the interceptor.
+            keyPair, 
+            nonce,
+        })})`;
     }
 
     public static async generateDPoPJkt(keyPair: CryptoKeyPair) : Promise<string> {
