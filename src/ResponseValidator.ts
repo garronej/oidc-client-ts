@@ -4,7 +4,6 @@
 import { Logger, JwtUtils } from "./utils";
 import { ErrorResponse } from "./errors";
 import type { MetadataService } from "./MetadataService";
-import { UserInfoService } from "./UserInfoService";
 import { TokenClient, localTimeByResponse } from "./TokenClient";
 import type { ExtraHeader, OidcClientSettingsStore } from "./OidcClientSettings";
 import type { SigninState } from "./SigninState";
@@ -13,7 +12,6 @@ import type { State } from "./State";
 import type { SignoutResponse } from "./SignoutResponse";
 import type { UserProfile } from "./User";
 import type { RefreshState } from "./RefreshState";
-import type { IdTokenClaims } from "./Claims";
 import type { ClaimsService } from "./ClaimsService";
 
 /**
@@ -21,7 +19,6 @@ import type { ClaimsService } from "./ClaimsService";
  */
 export class ResponseValidator {
     protected readonly _logger = new Logger("ResponseValidator");
-    protected readonly _userInfoService: UserInfoService;
     protected readonly _tokenClient: TokenClient;
 
     public constructor(
@@ -29,7 +26,6 @@ export class ResponseValidator {
         protected readonly _metadataService: MetadataService,
         protected readonly _claimsService: ClaimsService,
     ) {
-        this._userInfoService = new UserInfoService(this._settings, this._metadataService);
         this._tokenClient = new TokenClient(this._settings, this._metadataService);
     }
 
@@ -47,19 +43,7 @@ export class ResponseValidator {
         }
         logger.debug("tokens validated");
 
-        await this._processClaims(response, state?.skipUserInfo, response.isOpenId);
-        logger.debug("claims processed");
-    }
-
-    public async validateCredentialsResponse(response: SigninResponse, skipUserInfo: boolean): Promise<void> {
-        const logger = this._logger.create("validateCredentialsResponse");
-
-        if (response.isOpenId && !!response.id_token) {
-            this._validateIdTokenAttributes(response);
-        }
-        logger.debug("tokens validated");
-
-        await this._processClaims(response, skipUserInfo, response.isOpenId);
+        await this._processClaims(response);
         logger.debug("claims processed");
     }
 
@@ -86,8 +70,7 @@ export class ResponseValidator {
             response.profile = state.profile;
         }
 
-        const hasIdToken = response.isOpenId && !!response.id_token;
-        await this._processClaims(response, false, hasIdToken);
+        await this._processClaims(response);
         logger.debug("claims processed");
     }
 
@@ -151,25 +134,11 @@ export class ResponseValidator {
 
     }
 
-    protected async _processClaims(response: SigninResponse, skipUserInfo = false, validateSub = true): Promise<void> {
+    protected async _processClaims(response: SigninResponse): Promise<void> {
         const logger = this._logger.create("_processClaims");
         response.profile = this._claimsService.filterProtocolClaims(response.profile);
 
-        if (skipUserInfo || !this._settings.loadUserInfo || !response.access_token) {
-            logger.debug("not loading user info");
-            return;
-        }
-
-        logger.debug("loading user info");
-        const claims = await this._userInfoService.getClaims(response.access_token);
-        logger.debug("user info claims received from user info endpoint");
-
-        if (validateSub && claims.sub !== response.profile.sub) {
-            logger.throw(new Error("subject from UserInfo response does not match subject in ID Token"));
-        }
-
-        response.profile = this._claimsService.mergeClaims(response.profile, this._claimsService.filterProtocolClaims(claims as IdTokenClaims));
-        logger.debug("user info claims received, updated profile:", response.profile);
+        logger.debug("not loading user info");
     }
 
     protected async _processCode(response: SigninResponse, state: SigninState, extraHeaders?: Record<string, ExtraHeader>): Promise<void> {

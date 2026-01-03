@@ -1,10 +1,8 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import type { JwtClaims } from "./Claims";
 import type { OidcClientSettingsStore } from "./OidcClientSettings";
 import type { UserProfile } from "./User";
-import { Logger } from "./utils";
 
 /**
  * Protocol claims that could be removed by default from profile.
@@ -38,7 +36,6 @@ const InternalRequiredProtocolClaims = ["sub", "iss", "aud", "exp", "iat"];
  * @internal
  */
 export class ClaimsService {
-    protected readonly _logger = new Logger("ClaimsService");
     public constructor(
         protected readonly _settings: OidcClientSettingsStore,
     ) {}
@@ -64,31 +61,4 @@ export class ClaimsService {
         return result;
     }
 
-    public mergeClaims(claims1: JwtClaims, claims2: JwtClaims): UserProfile;
-    public mergeClaims(claims1: UserProfile, claims2: JwtClaims): UserProfile {
-        const result = { ...claims1 };
-        for (const [claim, values] of Object.entries(claims2)) {
-            if (result[claim] !== values) {
-                if (Array.isArray(result[claim]) || Array.isArray(values)) {
-                    if (this._settings.mergeClaimsStrategy.array == "replace") {
-                        result[claim] = values;
-                    } else {
-                        const mergedValues = Array.isArray(result[claim]) ? result[claim] as unknown[] : [result[claim]];
-                        for (const value of Array.isArray(values) ? values : [values]) {
-                            if (!mergedValues.includes(value)) {
-                                mergedValues.push(value);
-                            }
-                        }
-                        result[claim] = mergedValues;
-                    }
-                } else if (typeof result[claim] === "object" && typeof values === "object") {
-                    result[claim] = this.mergeClaims(result[claim] as JwtClaims, values as JwtClaims);
-                } else {
-                    result[claim] = values;
-                }
-            }
-        }
-
-        return result;
-    }
 }

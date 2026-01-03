@@ -27,7 +27,6 @@ export type ExtraHeader = string | (() => string);
  * @public
  */
 export interface DPoPSettings {
-    bind_authorization_code?: boolean;
     store: DPoPStore;
 }
 
@@ -99,18 +98,8 @@ export interface OidcClientSettings {
      * When specifying claims, the following claims are not allowed: ["sub", "iss", "aud", "exp", "iat"]
     */
     filterProtocolClaims?: boolean | string[];
-    /** Flag to control if additional identity data is loaded from the user info endpoint in order to populate the user's profile (default: false) */
-    loadUserInfo?: boolean;
     /** Number (in seconds) indicating the age of state entries in storage for authorize requests that are considered abandoned and thus can be cleaned up (default: 900) */
     staleStateAgeInSeconds?: number;
-
-    /**
-     * Indicates how objects returned from the user info endpoint as claims (e.g. `address`) are merged into the claims from the
-     * id token as a single object.  (default: `{ array: "replace" }`)
-     * - array: "replace": natives (string, int, float) and arrays are replaced, objects are merged as distinct objects
-     * - array: "merge": natives (string, int, float) are replaced, arrays and objects are merged as distinct objects
-     */
-    mergeClaimsStrategy?: { array: "replace" | "merge" };
 
     /**
      * Storage object used to persist interaction state (default: window.localStorage, InMemoryWebStorage iff no window).
@@ -204,9 +193,7 @@ export class OidcClientSettingsStore {
 
     // behavior flags
     public readonly filterProtocolClaims: boolean | string[];
-    public readonly loadUserInfo: boolean;
     public readonly staleStateAgeInSeconds: number;
-    public readonly mergeClaimsStrategy: { array: "replace" | "merge" };
     public readonly omitScopeWhenRequesting: boolean;
 
     public readonly stateStore: StateStore;
@@ -235,10 +222,8 @@ export class OidcClientSettingsStore {
         prompt, display, max_age, ui_locales, acr_values, resource, response_mode,
         // behavior flags
         filterProtocolClaims = true,
-        loadUserInfo = false,
         requestTimeoutInSeconds,
         staleStateAgeInSeconds = DefaultStaleStateAgeInSeconds,
-        mergeClaimsStrategy = { array: "replace" },
         disablePKCE = false,
         // other behavior
         stateStore,
@@ -290,9 +275,7 @@ export class OidcClientSettingsStore {
         this.response_mode = response_mode;
 
         this.filterProtocolClaims = filterProtocolClaims ?? true;
-        this.loadUserInfo = !!loadUserInfo;
         this.staleStateAgeInSeconds = staleStateAgeInSeconds;
-        this.mergeClaimsStrategy = mergeClaimsStrategy;
         this.omitScopeWhenRequesting = omitScopeWhenRequesting;
         this.disablePKCE = !!disablePKCE;
         this.revokeTokenAdditionalContentTypes = revokeTokenAdditionalContentTypes;

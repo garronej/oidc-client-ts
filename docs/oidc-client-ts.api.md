@@ -5,26 +5,6 @@
 ```ts
 
 // @public (undocumented)
-export type AccessTokenCallback = (...ev: unknown[]) => (Promise<void> | void);
-
-// @public (undocumented)
-export class AccessTokenEvents {
-    constructor(args: {
-        expiringNotificationTimeInSeconds: number;
-    });
-    addAccessTokenExpired(cb: AccessTokenCallback): () => void;
-    addAccessTokenExpiring(cb: AccessTokenCallback): () => void;
-    // (undocumented)
-    load(container: User): void;
-    // (undocumented)
-    protected readonly _logger: Logger;
-    removeAccessTokenExpired(cb: AccessTokenCallback): void;
-    removeAccessTokenExpiring(cb: AccessTokenCallback): void;
-    // (undocumented)
-    unload(): void;
-}
-
-// @public (undocumented)
 export interface AsyncStorage {
     clear(): Promise<void>;
     getItem(key: string): Promise<string | null>;
@@ -34,21 +14,8 @@ export interface AsyncStorage {
     setItem(key: string, value: string): Promise<void>;
 }
 
-// @internal (undocumented)
-export class CheckSessionIFrame {
-    constructor(_callback: () => Promise<void>, _client_id: string, url: string, _intervalInSeconds: number, _stopOnError: boolean);
-    // (undocumented)
-    load(): Promise<void>;
-    // (undocumented)
-    start(session_state: string): void;
-    // (undocumented)
-    stop(): void;
-}
-
 // @public (undocumented)
 export interface CreateSigninRequestArgs extends Omit<SigninRequestCreateArgs, "url" | "authority" | "client_id" | "redirect_uri" | "response_type" | "scope" | "state_data"> {
-    // (undocumented)
-    dpopJkt?: string;
     // (undocumented)
     redirect_uri?: string;
     // (undocumented)
@@ -149,28 +116,6 @@ export interface INavigator {
     callback(url: string, params?: unknown): Promise<void>;
     // (undocumented)
     prepare(params: unknown): Promise<IWindow>;
-}
-
-// Warning: (ae-forgotten-export) The symbol "DPoPStore" needs to be exported by the entry point index.d.ts
-//
-// @public
-export class IndexedDbDPoPStore implements DPoPStore {
-    // (undocumented)
-    createStore<T>(dbName: string, storeName: string): Promise<(txMode: IDBTransactionMode, callback: (store: IDBObjectStore) => T | PromiseLike<T>) => Promise<T>>;
-    // (undocumented)
-    readonly _dbName: string;
-    // (undocumented)
-    get(key: string): Promise<DPoPState>;
-    // (undocumented)
-    getAllKeys(): Promise<string[]>;
-    // (undocumented)
-    promisifyRequest<T = undefined>(request: IDBRequest<T> | IDBTransaction): Promise<T>;
-    // (undocumented)
-    remove(key: string): Promise<DPoPState>;
-    // (undocumented)
-    set(key: string, value: DPoPState): Promise<void>;
-    // (undocumented)
-    readonly _storeName: string;
 }
 
 // @public (undocumented)
@@ -335,17 +280,17 @@ export class OidcClient {
     // (undocumented)
     clearStaleState(): Promise<void>;
     // (undocumented)
-    createSigninRequest({ state, request, request_uri, request_type, id_token_hint, login_hint, skipUserInfo, nonce, url_state, response_type, scope, redirect_uri, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, extraQueryParams, extraTokenParams, dpopJkt, omitScopeWhenRequesting, transformUrl, }: CreateSigninRequestArgs): Promise<SigninRequest>;
+    createSigninRequest({ state, request, request_uri, request_type, id_token_hint, login_hint, skipUserInfo, nonce, url_state, response_type, scope, redirect_uri, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, extraQueryParams, extraTokenParams, omitScopeWhenRequesting, transformUrl, }: CreateSigninRequestArgs): Promise<SigninRequest>;
     // (undocumented)
     createSignoutRequest({ state, id_token_hint, client_id, request_type, post_logout_redirect_uri, extraQueryParams, }: CreateSignoutRequestArgs): Promise<SignoutRequest>;
+    // Warning: (ae-forgotten-export) The symbol "DPoPStore" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     getDpopProof(dpopStore: DPoPStore, nonce?: string): Promise<string>;
     // (undocumented)
     protected readonly _logger: Logger;
     // (undocumented)
     readonly metadataService: MetadataService;
-    // (undocumented)
-    processResourceOwnerPasswordCredentials({ username, password, skipUserInfo, extraTokenParams, }: ProcessResourceOwnerPasswordCredentialsArgs): Promise<SigninResponse>;
     // (undocumented)
     processSigninResponse(url: string, extraHeaders?: Record<string, ExtraHeader>): Promise<SigninResponse>;
     // (undocumented)
@@ -360,8 +305,6 @@ export class OidcClient {
         state: State | undefined;
         response: SignoutResponse;
     }>;
-    // (undocumented)
-    revokeToken(token: string, type?: "access_token" | "refresh_token"): Promise<void>;
     // (undocumented)
     readonly settings: OidcClientSettingsStore;
     // (undocumented)
@@ -396,11 +339,7 @@ export interface OidcClientSettings {
     extraTokenParams?: Record<string, unknown>; /** oidc-spa addition */
     fetchRequestCredentials?: RequestCredentials; /** oidc-spa addition */
     filterProtocolClaims?: boolean | string[]; /** oidc-spa addition */
-    loadUserInfo?: boolean; /** oidc-spa addition */
     max_age?: number; /** oidc-spa addition */
-    mergeClaimsStrategy?: {
-        array: "replace" | "merge";
-    }; /** oidc-spa addition */
     metadata?: Partial<OidcMetadata>; /** oidc-spa addition */
     metadataSeed?: Partial<OidcMetadata>; /** oidc-spa addition */
     // (undocumented)
@@ -426,7 +365,7 @@ export interface OidcClientSettings {
 
 // @public
 export class OidcClientSettingsStore {
-    constructor({ stateUrlParamValue, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, loadUserInfo, requestTimeoutInSeconds, staleStateAgeInSeconds, mergeClaimsStrategy, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
+    constructor({ stateUrlParamValue, authority, metadataUrl, metadata, signingKeys, metadataSeed, client_id, client_secret, response_type, scope, redirect_uri, post_logout_redirect_uri, client_authentication, prompt, display, max_age, ui_locales, acr_values, resource, response_mode, filterProtocolClaims, requestTimeoutInSeconds, staleStateAgeInSeconds, disablePKCE, stateStore, revokeTokenAdditionalContentTypes, fetchRequestCredentials, refreshTokenAllowedScope, extraQueryParams, extraTokenParams, extraHeaders, dpop, omitScopeWhenRequesting, }: OidcClientSettings);
     // (undocumented)
     readonly acr_values: string | undefined;
     // (undocumented)
@@ -454,13 +393,7 @@ export class OidcClientSettingsStore {
     // (undocumented)
     readonly filterProtocolClaims: boolean | string[];
     // (undocumented)
-    readonly loadUserInfo: boolean;
-    // (undocumented)
     readonly max_age: number | undefined;
-    // (undocumented)
-    readonly mergeClaimsStrategy: {
-        array: "replace" | "merge";
-    };
     // (undocumented)
     readonly metadata: Partial<OidcMetadata> | undefined;
     // (undocumented)
@@ -560,53 +493,6 @@ export interface OidcStandardClaims {
 }
 
 // @public (undocumented)
-export interface PopupWindowFeatures {
-    // (undocumented)
-    [k: string]: boolean | string | number | undefined;
-    closePopupWindowAfterInSeconds?: number;
-    // (undocumented)
-    height?: number;
-    // (undocumented)
-    left?: number;
-    // (undocumented)
-    location?: boolean | string;
-    // (undocumented)
-    menubar?: boolean | string;
-    // (undocumented)
-    resizable?: boolean | string;
-    // (undocumented)
-    scrollbars?: boolean | string;
-    // (undocumented)
-    status?: boolean | string;
-    // (undocumented)
-    toolbar?: boolean | string;
-    // (undocumented)
-    top?: number;
-    // (undocumented)
-    width?: number;
-}
-
-// @public (undocumented)
-export interface PopupWindowParams {
-    popupSignal?: AbortSignal | null;
-    // (undocumented)
-    popupWindowFeatures?: PopupWindowFeatures;
-    // (undocumented)
-    popupWindowTarget?: string;
-}
-
-// @public (undocumented)
-export type ProcessResourceOwnerPasswordCredentialsArgs = {
-    username: string;
-    password: string;
-    skipUserInfo?: boolean;
-    extraTokenParams?: Record<string, unknown>;
-};
-
-// @public (undocumented)
-export type QuerySessionStatusArgs = IFrameWindowParams & ExtraSigninRequestArgs;
-
-// @public (undocumented)
 export interface RedirectParams {
     // (undocumented)
     redirectMethod?: "replace" | "assign";
@@ -638,37 +524,7 @@ export class RefreshState {
 }
 
 // @public (undocumented)
-export type RevokeTokensTypes = UserManagerSettings["revokeTokenTypes"];
-
-// @public (undocumented)
-export class SessionMonitor {
-    constructor(_userManager: UserManager);
-    // (undocumented)
-    protected _callback: () => Promise<void>;
-    // (undocumented)
-    protected _init(): Promise<void>;
-    // (undocumented)
-    protected _start: (user: User | {
-        session_state: string;
-        profile: {
-            sub: string;
-        } | null;
-    }) => Promise<void>;
-    // (undocumented)
-    protected _stop: () => void;
-}
-
-// @public (undocumented)
-export interface SessionStatus {
-    session_state: string;
-    sub?: string;
-}
-
-// @public (undocumented)
 export type SigningKey = Record<string, string | string[]>;
-
-// @public (undocumented)
-export type SigninPopupArgs = PopupWindowParams & ExtraSigninRequestArgs;
 
 // @public (undocumented)
 export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & {
@@ -678,7 +534,7 @@ export type SigninRedirectArgs = RedirectParams & ExtraSigninRequestArgs & {
 // @public (undocumented)
 export class SigninRequest {
     // (undocumented)
-    static create({ stateUrlParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, dpopJkt, omitScopeWhenRequesting, transformUrl, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
+    static create({ stateUrlParamValue, url, authority, client_id, redirect_uri, response_type, scope, state_data, response_mode, request_type, client_secret, nonce, url_state, resource, skipUserInfo, extraQueryParams, extraTokenParams, disablePKCE, omitScopeWhenRequesting, transformUrl, ...optionalParams }: SigninRequestCreateArgs): Promise<SigninRequest>;
     // (undocumented)
     readonly state: SigninState;
     // (undocumented)
@@ -699,8 +555,6 @@ export interface SigninRequestCreateArgs {
     disablePKCE?: boolean;
     // (undocumented)
     display?: string;
-    // (undocumented)
-    dpopJkt?: string;
     // (undocumented)
     extraQueryParams?: Record<string, string | number | boolean>;
     // (undocumented)
@@ -746,9 +600,6 @@ export interface SigninRequestCreateArgs {
     // (undocumented)
     url_state?: string;
 }
-
-// @public (undocumented)
-export type SigninResourceOwnerCredentialsArgs = ProcessResourceOwnerPasswordCredentialsArgs;
 
 // @public (undocumented)
 export class SigninResponse {
@@ -866,9 +717,6 @@ export type SigninStateCreateArgs = Omit<SigninStateArgs, "code_verifier"> & {
 };
 
 // @public (undocumented)
-export type SignoutPopupArgs = PopupWindowParams & ExtraSignoutRequestArgs;
-
-// @public (undocumented)
 export type SignoutRedirectArgs = RedirectParams & ExtraSignoutRequestArgs;
 
 // @public (undocumented)
@@ -912,12 +760,6 @@ export class SignoutResponse {
     readonly state: string | null;
     userState: unknown;
 }
-
-// @public (undocumented)
-export type SignoutSilentArgs = IFrameWindowParams & ExtraSignoutRequestArgs;
-
-// @public (undocumented)
-export type SilentRenewErrorCallback = (error: Error) => Promise<void> | void;
 
 // @public (undocumented)
 export class State {
@@ -1015,23 +857,14 @@ export interface UseRefreshTokenArgs {
     timeoutInSeconds?: number;
 }
 
-// @public (undocumented)
-export type UserLoadedCallback = (user: User) => Promise<void> | void;
-
 // @public
 export class UserManager {
-    constructor(settings: UserManagerSettings, redirectNavigator?: INavigator, popupNavigator?: INavigator, iframeNavigator?: INavigator);
+    constructor(settings: UserManagerSettings, redirectNavigator?: INavigator, iframeNavigator?: INavigator);
     // (undocumented)
     protected _buildUser(signinResponse: SigninResponse, verifySub?: string): Promise<User>;
     clearStaleState(): Promise<void>;
     // (undocumented)
     protected readonly _client: OidcClient;
-    dpopProof(url: string, user: User, httpMethod?: string, nonce?: string): Promise<string | undefined>;
-    get events(): UserManagerEvents;
-    // (undocumented)
-    protected readonly _events: UserManagerEvents;
-    // (undocumented)
-    generateDPoPJkt(dpopSettings: DPoPSettings): Promise<string | undefined>;
     getUser(): Promise<User | null>;
     // (undocumented)
     protected readonly _iframeNavigator: INavigator;
@@ -1041,53 +874,29 @@ export class UserManager {
     protected readonly _logger: Logger;
     get metadataService(): MetadataService;
     // (undocumented)
-    protected readonly _popupNavigator: INavigator;
-    querySessionStatus(args?: QuerySessionStatusArgs): Promise<SessionStatus | null>;
-    // (undocumented)
     protected readonly _redirectNavigator: INavigator;
     removeUser(): Promise<void>;
-    // (undocumented)
-    protected _revokeInternal(user: User | null, types?: ("access_token" | "refresh_token")[]): Promise<void>;
-    // (undocumented)
-    revokeTokens(types?: RevokeTokensTypes): Promise<void>;
-    // (undocumented)
-    protected readonly _sessionMonitor: SessionMonitor | null;
     readonly settings: UserManagerSettingsStore;
     // (undocumented)
     protected _signin(args: CreateSigninRequestArgs, handle: IWindow, verifySub?: string): Promise<User>;
     signinCallback(url?: string): Promise<User | undefined>;
     // (undocumented)
     protected _signinEnd(url: string, verifySub?: string): Promise<User>;
-    signinPopup(args?: SigninPopupArgs): Promise<User>;
-    signinPopupCallback(url?: string, keepOpen?: boolean): Promise<void>;
     signinRedirect(args: SigninRedirectArgs): Promise<void>;
     signinRedirectCallback(url?: string): Promise<User>;
-    signinResourceOwnerCredentials({ username, password, skipUserInfo, }: SigninResourceOwnerCredentialsArgs): Promise<User>;
     signinSilent(args: SigninSilentArgs): Promise<User | null>;
     signinSilentCallback(url?: string): Promise<void>;
     // (undocumented)
     protected _signinStart(args: CreateSigninRequestArgs, handle: IWindow): Promise<NavigateResponse>;
-    // (undocumented)
-    protected _signout(args: CreateSignoutRequestArgs, handle: IWindow): Promise<SignoutResponse>;
-    signoutCallback(url?: string, keepOpen?: boolean): Promise<SignoutResponse | undefined>;
+    signoutCallback(url?: string): Promise<SignoutResponse | undefined>;
     // (undocumented)
     protected _signoutEnd(url: string): Promise<SignoutResponse>;
-    signoutPopup(args?: SignoutPopupArgs): Promise<void>;
-    signoutPopupCallback(url?: string, keepOpen?: boolean): Promise<void>;
     signoutRedirect(args?: SignoutRedirectArgs): Promise<void>;
     signoutRedirectCallback(url?: string): Promise<SignoutResponse>;
-    signoutSilent(args?: SignoutSilentArgs): Promise<void>;
-    signoutSilentCallback(url?: string): Promise<void>;
     // (undocumented)
     protected _signoutStart(args: CreateSignoutRequestArgs, handle: IWindow): Promise<NavigateResponse>;
-    // Warning: (ae-forgotten-export) The symbol "SilentRenewService" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    protected readonly _silentRenewService: SilentRenewService;
-    startSilentRenew(): void;
     // (undocumented)
     protected readonly _stateUrlParamValue: string;
-    stopSilentRenew(): void;
     // (undocumented)
     storeUser(user: User | null): Promise<void>;
     // (undocumented)
@@ -1096,66 +905,17 @@ export class UserManager {
     protected get _userStoreKey(): string;
 }
 
-// @public (undocumented)
-export class UserManagerEvents extends AccessTokenEvents {
-    constructor(settings: UserManagerSettingsStore);
-    addSilentRenewError(cb: SilentRenewErrorCallback): () => void;
-    addUserLoaded(cb: UserLoadedCallback): () => void;
-    addUserSessionChanged(cb: UserSessionChangedCallback): () => void;
-    addUserSignedIn(cb: UserSignedInCallback): () => void;
-    addUserSignedOut(cb: UserSignedOutCallback): () => void;
-    addUserUnloaded(cb: UserUnloadedCallback): () => void;
-    // (undocumented)
-    load(user: User, raiseEvent?: boolean): Promise<void>;
-    // (undocumented)
-    protected readonly _logger: Logger;
-    // @internal (undocumented)
-    _raiseSilentRenewError(e: Error): Promise<void>;
-    // @internal (undocumented)
-    _raiseUserSessionChanged(): Promise<void>;
-    // @internal (undocumented)
-    _raiseUserSignedIn(): Promise<void>;
-    // @internal (undocumented)
-    _raiseUserSignedOut(): Promise<void>;
-    removeSilentRenewError(cb: SilentRenewErrorCallback): void;
-    removeUserLoaded(cb: UserLoadedCallback): void;
-    removeUserSessionChanged(cb: UserSessionChangedCallback): void;
-    removeUserSignedIn(cb: UserSignedInCallback): void;
-    removeUserSignedOut(cb: UserSignedOutCallback): void;
-    removeUserUnloaded(cb: UserUnloadedCallback): void;
-    // (undocumented)
-    unload(): Promise<void>;
-}
-
 // @public
 export interface UserManagerSettings extends OidcClientSettings {
-    accessTokenExpiringNotificationTimeInSeconds?: number;
-    automaticSilentRenew?: boolean;
-    checkSessionIntervalInSeconds?: number;
     iframeNotifyParentOrigin?: string;
     iframeScriptOrigin?: string;
     includeIdTokenInSilentRenew?: boolean;
-    includeIdTokenInSilentSignout?: boolean;
-    // (undocumented)
-    monitorAnonymousSession?: boolean;
-    monitorSession?: boolean;
-    // (undocumented)
-    popup_post_logout_redirect_uri?: string;
-    popup_redirect_uri?: string;
-    popupWindowFeatures?: PopupWindowFeatures;
-    popupWindowTarget?: string;
-    // (undocumented)
-    query_status_response_type?: string;
     redirectMethod?: "replace" | "assign";
     redirectTarget?: "top" | "self";
-    revokeTokensOnSignout?: boolean;
-    revokeTokenTypes?: ("access_token" | "refresh_token")[];
     silent_redirect_uri?: string;
     silentRequestTimeoutInSeconds?: number;
     // (undocumented)
     stateUrlParamValue: string;
-    // (undocumented)
-    stopCheckSessionOnError?: boolean;
     userStore?: WebStorageStateStore;
     validateSubOnSilentRenew?: boolean;
 }
@@ -1164,47 +924,19 @@ export interface UserManagerSettings extends OidcClientSettings {
 export class UserManagerSettingsStore extends OidcClientSettingsStore {
     constructor(args: UserManagerSettings);
     // (undocumented)
-    readonly accessTokenExpiringNotificationTimeInSeconds: number;
-    // (undocumented)
-    readonly automaticSilentRenew: boolean;
-    // (undocumented)
-    readonly checkSessionIntervalInSeconds: number;
-    // (undocumented)
     readonly iframeNotifyParentOrigin: string | undefined;
     // (undocumented)
     readonly iframeScriptOrigin: string | undefined;
     // (undocumented)
     readonly includeIdTokenInSilentRenew: boolean;
     // (undocumented)
-    readonly includeIdTokenInSilentSignout: boolean;
-    // (undocumented)
-    readonly monitorAnonymousSession: boolean;
-    // (undocumented)
-    readonly monitorSession: boolean;
-    // (undocumented)
-    readonly popup_post_logout_redirect_uri: string | undefined;
-    // (undocumented)
-    readonly popup_redirect_uri: string;
-    // (undocumented)
-    readonly popupWindowFeatures: PopupWindowFeatures;
-    // (undocumented)
-    readonly popupWindowTarget: string;
-    // (undocumented)
-    readonly query_status_response_type: string;
-    // (undocumented)
     readonly redirectMethod: "replace" | "assign";
     // (undocumented)
     readonly redirectTarget: "top" | "self";
     // (undocumented)
-    readonly revokeTokensOnSignout: boolean;
-    // (undocumented)
-    readonly revokeTokenTypes: ("access_token" | "refresh_token")[];
-    // (undocumented)
     readonly silent_redirect_uri: string;
     // (undocumented)
     readonly silentRequestTimeoutInSeconds: number;
-    // (undocumented)
-    readonly stopCheckSessionOnError: boolean;
     // (undocumented)
     readonly userStore: WebStorageStateStore;
     // (undocumented)
@@ -1213,18 +945,6 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
 // @public
 export type UserProfile = IdTokenClaims;
-
-// @public (undocumented)
-export type UserSessionChangedCallback = () => Promise<void> | void;
-
-// @public (undocumented)
-export type UserSignedInCallback = () => Promise<void> | void;
-
-// @public (undocumented)
-export type UserSignedOutCallback = () => Promise<void> | void;
-
-// @public (undocumented)
-export type UserUnloadedCallback = () => Promise<void> | void;
 
 // @public (undocumented)
 export const Version: string;

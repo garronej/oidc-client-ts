@@ -26,8 +26,6 @@ export interface CreateSigninRequestArgs
     redirect_uri?: string;
     response_type?: string;
     scope?: string;
-    dpopJkt?: string;
-
     /** custom "state", which can be used by a caller to have "data" round tripped */
     state?: unknown;
 
@@ -60,13 +58,6 @@ export type CreateSignoutRequestArgs = Omit<SignoutRequestArgs, "url" | "state_d
 /**
  * @public
  */
-export type ProcessResourceOwnerPasswordCredentialsArgs = {
-    username: string;
-    password: string;
-    skipUserInfo?: boolean;
-    extraTokenParams?: Record<string, unknown>;
-};
-
 /**
  * Provides the raw OIDC/OAuth2 protocol support for the authorization endpoint and the end session endpoint in the
  * authorization server. It provides a bare-bones protocol implementation and is used by the UserManager class.
@@ -122,7 +113,6 @@ export class OidcClient {
         response_mode = this.settings.response_mode,
         extraQueryParams = this.settings.extraQueryParams,
         extraTokenParams = this.settings.extraTokenParams,
-        dpopJkt,
         omitScopeWhenRequesting = this.settings.omitScopeWhenRequesting,
         transformUrl,
     }: CreateSigninRequestArgs): Promise<SigninRequest> {
@@ -145,7 +135,7 @@ export class OidcClient {
             scope,
             state_data: state,
             url_state,
-            prompt, display, max_age, ui_locales, id_token_hint, login_hint, acr_values, dpopJkt,
+            prompt, display, max_age, ui_locales, id_token_hint, login_hint, acr_values,
             resource, request, request_uri, extraQueryParams, extraTokenParams, request_type, response_mode,
             client_secret: this.settings.client_secret,
             skipUserInfo,
@@ -242,27 +232,6 @@ export class OidcClient {
             keyPair: dpopState.keys,
             nonce: dpopState.nonce,
         });
-    }
-
-    public async processResourceOwnerPasswordCredentials({
-        username,
-        password,
-        skipUserInfo = false,
-        extraTokenParams = {},
-    }: ProcessResourceOwnerPasswordCredentialsArgs): Promise<SigninResponse> {
-        const tokenResponse: Record<string, unknown> = await this._tokenClient.exchangeCredentials({ username, password, ...extraTokenParams });
-        const signinResponse: SigninResponse = new SigninResponse(new URLSearchParams());
-        Object.assign(signinResponse, tokenResponse);
-        signinResponse.__oidc_spa_tokenResponse = tokenResponse;
-        signinResponse.__oidc_spa_localTimeWhenTokenIssued = (()=>{
-            const time = localTimeByResponse.get(tokenResponse);
-            if (time === undefined) {
-                throw new Error("oidc-spa error in oidc-client-ts");
-            }
-            return time;
-        })();
-        await this._validator.validateCredentialsResponse(signinResponse, skipUserInfo);
-        return signinResponse;
     }
 
     public async useRefreshToken({
@@ -441,11 +410,4 @@ export class OidcClient {
         return State.clearStaleState(this.settings.stateStore, this.settings.staleStateAgeInSeconds);
     }
 
-    public async revokeToken(token: string, type?: "access_token" | "refresh_token"): Promise<void> {
-        this._logger.create("revokeToken");
-        return await this._tokenClient.revoke({
-            token,
-            token_type_hint: type,
-        });
-    }
 }

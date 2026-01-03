@@ -24,17 +24,6 @@ export interface ExchangeCodeArgs {
 /**
  * @internal
  */
-export interface ExchangeCredentialsArgs {
-    client_id?: string;
-    client_secret?: string;
-
-    grant_type?: string;
-    scope?: string;
-
-    username: string;
-    password: string;
-}
-
 /**
  * @internal
  */
@@ -56,11 +45,6 @@ export interface ExchangeRefreshTokenArgs {
 /**
  * @internal
  */
-export interface RevokeArgs {
-    token: string;
-    token_type_hint?: "access_token" | "refresh_token";
-}
-
 // NOTE: oidc-spa addition
 export const localTimeByResponse = new WeakMap<Record<string, unknown>, number>();
 
@@ -149,63 +133,6 @@ export class TokenClient {
     }
 
     /**
-     * Exchange credentials.
-     *
-     * @see https://www.rfc-editor.org/rfc/rfc6749#section-4.3.2
-     */
-    public async exchangeCredentials({
-        grant_type = "password",
-        client_id = this._settings.client_id,
-        client_secret = this._settings.client_secret,
-        scope = this._settings.scope,
-        ...args
-    }: ExchangeCredentialsArgs): Promise<Record<string, unknown>> {
-        const logger = this._logger.create("exchangeCredentials");
-
-        if (!client_id) {
-            logger.throw(new Error("A client_id is required"));
-        }
-
-        const params = new URLSearchParams({ grant_type });
-        if (!this._settings.omitScopeWhenRequesting) {
-            params.set("scope", scope);
-        }
-        for (const [key, value] of Object.entries(args)) {
-            if (value != null) {
-                params.set(key, value);
-            }
-        }
-
-        let basicAuth: string | undefined;
-        switch (this._settings.client_authentication) {
-            case "client_secret_basic":
-                if (!client_secret) {
-                    logger.throw(new Error("A client_secret is required"));
-                    throw null; // https://github.com/microsoft/TypeScript/issues/46972
-                }
-                basicAuth = CryptoUtils.generateBasicAuth(client_id, client_secret);
-                break;
-            case "client_secret_post":
-                params.append("client_id", client_id);
-                if (client_secret) {
-                    params.append("client_secret", client_secret);
-                }
-                break;
-        }
-
-        const url = await this._metadataService.getTokenEndpoint(false);
-        logger.debug("got token endpoint");
-
-        const timeBefore= Date.now();
-        const response = await this._jsonService.postForm(url, { body: params, basicAuth, timeoutInSeconds: this._settings.requestTimeoutInSeconds, initCredentials: this._settings.fetchRequestCredentials });
-        const timeAfter = Date.now();
-        localTimeByResponse.set(response, Math.floor((timeBefore + timeAfter)/2));
-        logger.debug("got response");
-
-        return response;
-    }
-
-    /**
      * Exchange a refresh token.
      *
      * @see https://www.rfc-editor.org/rfc/rfc6749#section-6
@@ -264,33 +191,4 @@ export class TokenClient {
         return response;
     }
 
-    /**
-     * Revoke an access or refresh token.
-     *
-     * @see https://datatracker.ietf.org/doc/html/rfc7009#section-2.1
-     */
-    public async revoke(args: RevokeArgs): Promise<void> {
-        const logger = this._logger.create("revoke");
-        if (!args.token) {
-            logger.throw(new Error("A token is required"));
-        }
-
-        const url = await this._metadataService.getRevocationEndpoint(false);
-
-        logger.debug(`got revocation endpoint, revoking ${args.token_type_hint ?? "default token type"}`);
-
-        const params = new URLSearchParams();
-        for (const [key, value] of Object.entries(args)) {
-            if (value != null) {
-                params.set(key, value);
-            }
-        }
-        params.set("client_id", this._settings.client_id);
-        if (this._settings.client_secret) {
-            params.set("client_secret", this._settings.client_secret);
-        }
-
-        await this._jsonService.postForm(url, { body: params, timeoutInSeconds: this._settings.requestTimeoutInSeconds });
-        logger.debug("got response");
-    }
 }
